@@ -8,8 +8,6 @@ module Fastlane
         uuid_regex = /[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/
 
         certificate_path = params[:certificate_path]
-        UI.user_error!("Couldn't find certificate") if certificate_path.nil?
-        UI.user_error!("Couldn't find certificate at path `#{certificate_path}`") unless File.exist?(certificate_path)
 
         simulators = Actions.sh("xcrun simctl list | grep Booted", error_callback: ->(result) {
           UI.crash!("Could not detect any Booted simulators. Check that `xcrun simctl list` is working.")
