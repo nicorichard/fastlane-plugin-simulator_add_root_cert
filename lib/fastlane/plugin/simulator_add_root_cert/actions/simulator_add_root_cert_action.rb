@@ -41,7 +41,7 @@ module Fastlane
       def self.available_options
         [
           FastlaneCore::ConfigItem.new(key: :certificate_path,
-                                  env_name: "SIMULATOR_ADD_ROOT_CERT_PATH",
+                                  env_name: "SIMULATOR_ADD_ROOT_CERTIFICATE_PATH",
                                description: "Relative path to a root certificate",
                                   optional: false,
                                       type: String)          
