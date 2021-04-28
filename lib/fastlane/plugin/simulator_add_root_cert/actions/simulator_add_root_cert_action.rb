@@ -9,13 +9,19 @@ module Fastlane
 
         certificate_path = params[:certificate_path]
 
-        simulators = Actions.sh("xcrun simctl list | grep Booted", error_callback: ->(result) {
-          UI.crash!("Could not detect any Booted simulators. Check that `xcrun simctl list` is working.")
-        }) 
+        simulators = sh("xcrun simctl list | grep Booted", "Could not detect any Booted simulators. Check that `xcrun simctl list` is working.")
 
-        simulators.scan(uuid_regex).each { |uuid|
-          Actions.sh "xcrun simctl keychain #{uuid} add-root-cert #{certificate_path}"
-        }
+        simulators.scan(uuid_regex).uniq.each do |uuid|
+          sh("xcrun simctl keychain #{uuid} add-root-cert #{certificate_path}")
+        end
+      end
+
+      def self.sh(command, error_message = nil)
+        Actions.sh(command, error_callback: lambda { |_|
+          if error_message
+            UI.error(error_message)
+          end
+        })
       end
 
       def self.description
@@ -42,7 +48,7 @@ module Fastlane
                                   env_name: "SIMULATOR_ADD_ROOT_CERTIFICATE_PATH",
                                description: "Relative path to a root certificate",
                                   optional: false,
-                                      type: String)          
+                                      type: String)
         ]
       end
 
